@@ -89,7 +89,7 @@ string uin_to_str(unsigned int x) {
     return ans;
 }
 
-unsigned int shift(unsigned int a, unsigned int n) {
+unsigned int rotateL(unsigned int a, unsigned int n) {
     return (a << n) | (a >> (32 - n));
 }
 
@@ -97,7 +97,7 @@ void update(unsigned int* md, int res, int t, int y) {
     for(int i = 4; i >= 2; i --) {
         md[i] = md[i - 1];
     }
-    md[1] = md[1] + shift(md[0] + res + t + T[y], s[y]);
+    md[1] = md[1] + rotateL(md[0] + res + t + T[y], s[y]);
     md[0] = md[4];
 }
 
@@ -143,18 +143,12 @@ string encode(string str) {
         }
         calculate(tmp);
     }
-    /*
-    cout<<FA<<endl;
-    cout<<FB<<endl;
-    cout<<FC<<endl;
-    cout<<FD<<endl;
-    */
     return uin_to_str(FA) + uin_to_str(FB) + uin_to_str(FC) + uin_to_str(FD);
 }
 
 int main() {
     string str;
     cout << "Plain Text: ";
-    getline(cin,str);
+    getline(cin, str);
     cout << "result: " << encode(str) << endl;
 }
