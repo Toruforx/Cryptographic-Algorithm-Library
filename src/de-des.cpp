@@ -191,7 +191,7 @@ string int_to_str(int* ct) {
     return ans;
 }
 
-string encode(string strx, string strk) {
+string decode(string strx, string strk) {
     int bit[64] = {0}, key[64] = {0}, res;
     for(int i = 0; i < strx.length(); i ++) {
         res = m[strx[i]];
@@ -220,5 +220,5 @@ int main() {
     getline(cin, strx);
     cout << "Key Text: ";
     getline(cin, strk);
-    cout << "result: " << encode(strx, strk) << endl;
+    cout << "result: " << decode(strx, strk) << endl;
 }
