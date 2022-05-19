@@ -95,7 +95,7 @@ const int S[8][4][16] = {
     2,1,14,7,4,10,8,13,15,12,9,0,3,5,6,11
 };
 
-int L[16][32], R[16][32], C[17][28], D[17][28], K[17][48], FT[64];
+int L[17][32], R[17][32], C[17][28], D[17][28], K[17][48], FT[64];
 
 void padding(string str, int* rep) {
     for(int i = 0; i < str.length() * 8; i ++) {
@@ -216,12 +216,9 @@ int main() {
     m['8'] = 8; m['9'] = 9; m['a'] = 10;m['b'] = 11;
     m['c'] = 12; m['d'] = 13; m['e'] = 14;m['f'] = 16;
     string strx, strk;//64bit - 8char
-    /*cout << "Cipher Text: ";
+    cout << "Cipher Text: ";
     getline(cin, strx);
     cout << "Key Text: ";
     getline(cin, strk);
-    */
-    strx = "3b6c72b2710eb513";
-    strk = "security";
     cout << "result: " << encode(strx, strk) << endl;
 }
