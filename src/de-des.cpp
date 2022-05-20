@@ -210,12 +210,19 @@ string decode(string strx, string strk) {
     return int_to_str(FT);
 }
 
-int main() {
+int main(int argc, char** argv) {
+    string strx, strk;//64bit - 8char
+
+    /*if (argc != 3 || strlen(argv[1]) != 9 || strlen(argv[2]) != 9) {
+        perror("Usage ...");
+        exit(1);
+    }
+    */
     m['0'] = 0; m['1'] = 1; m['2'] = 2;m['3'] = 3;
     m['4'] = 4; m['5'] = 5; m['6'] = 6;m['7'] = 7;
     m['8'] = 8; m['9'] = 9; m['a'] = 10;m['b'] = 11;
     m['c'] = 12; m['d'] = 13; m['e'] = 14;m['f'] = 16;
-    string strx, strk;//64bit - 8char
+
     cout << "Cipher Text: ";
     getline(cin, strx);
     cout << "Key Text: ";
