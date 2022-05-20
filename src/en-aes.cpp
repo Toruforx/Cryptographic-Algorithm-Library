@@ -73,15 +73,34 @@ void row_shift(unsigned int* state) {
     }
 }
 
+unsigned int multi(unsigned char a, unsigned char b) {
+    unsigned int ans = 0, v;
+    for (int i = 0; i < 8; i ++)
+    {
+        if ((b & 0x01) != 0)
+        {
+            ans ^= a;
+        }
+        v = a>>7;
+        a <<= 1;
+        if(v != 0)
+        {
+            a ^= 0x1b;
+        }
+        b >>= 1;
+    }
+    return ans;
+}
+
 void col_mix(unsigned int* state) {
     unsigned int tmp, statep[16];
     for(int i = 0; i < 4; i ++) {
         for(int j = 0; j < 4; j ++) {
             tmp = 0;
             for(int k = 0; k < 4; k ++) {
-                tmp ^= colM[i][k] * state[k + 4 * j];
+                tmp ^= multi(colM[i][k], state[k + 4 * j]);
             }
-            statep[i + 4 * j] = tmp;
+            statep[i + 4 * j] = tmp & 0x00ff;
         }
     }
     for(int i = 0; i < 16; i ++) {
@@ -92,7 +111,7 @@ void col_mix(unsigned int* state) {
 unsigned int T(unsigned int x, int t) {
     unsigned int tmp = 0;
     int r, c;
-    x = ((x << 8) | (x >> 24)) & 0x0000ffff;
+    x = (x << 8) | (x >> 24);
     for(int i = 0; i < 4; i ++) {
         c = x % 16;
         x >>= 4;
@@ -108,7 +127,7 @@ void generate_w(string str)
 {
     unsigned int tmp, key[16];
     for(int i = 0; i < 16; i ++) {
-        key[i] = (char)str[i];
+        key[i] = (unsigned int)str[i];
         w[i / 4] |= key[i] << ((3 - i % 4) * 8);
     }
     for(int i = 4; i < 44; i ++) {
@@ -118,7 +137,6 @@ void generate_w(string str)
         else {
             w[i] = w[i - 4] ^ T(w[i - 1], i / 4 - 1);
         }
-        cout<<w[i]<<endl;
     }
     return;
 }
@@ -130,7 +148,7 @@ void add(unsigned int* state, int t) {
         if(i % 4 == 3) {
             tmp ^= w[4 * t + i / 4];
             for(int j = 0; j < 4; j ++) {
-                state[i - j] = tmp % 64;
+                state[i - j] = tmp % 256;
                 tmp >>= 8;
             }
             tmp = 0;
@@ -145,7 +163,6 @@ string int_to_str(unsigned int* ct) {
         res = ct[i];
         ans = ans + str16[res / 16];
         ans = ans + str16[res % 16];
-        //cout<<res<<endl;
     }
     return ans;
 }
@@ -153,8 +170,7 @@ string int_to_str(unsigned int* ct) {
 string encode(string strx, string strk) {
     unsigned int bit[16] = {0};
     for(int i = 0; i < 16; i ++) {
-        bit[i] = (char)strx[i];
-        //cout<<bit[i]<<endl;
+        bit[i] = (unsigned int)strx[i];
     }
     generate_w(strk);
     add(bit,0);
@@ -163,6 +179,7 @@ string encode(string strx, string strk) {
         row_shift(bit);
         col_mix(bit);
         add(bit,t);
+        
     }
     substitute(bit);
     row_shift(bit);
@@ -172,13 +189,9 @@ string encode(string strx, string strk) {
 
 int main() {
     string strx, strk;//128bit - 16char
-    /*
     cout << "Plain Text: ";
     getline(cin, strx);
     cout << "Key Text: ";
     getline(cin, strk);
-    */
-    strx = "abcdefghijklmnop";
-    strk = "abcdefghijklmnop";
     cout << "result: " << encode(strx, strk) << endl;
 }
