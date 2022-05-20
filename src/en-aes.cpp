@@ -5,7 +5,7 @@ using namespace std;
 
 const char str16[] = "0123456789abcdef";
 
-const int S[16][16] = { 0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76,
+const unsigned int S[16][16] = { 0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76,
 	0xca, 0x82, 0xc9, 0x7d, 0xfa, 0x59, 0x47, 0xf0, 0xad, 0xd4, 0xa2, 0xaf, 0x9c, 0xa4, 0x72, 0xc0,
 	0xb7, 0xfd, 0x93, 0x26, 0x36, 0x3f, 0xf7, 0xcc, 0x34, 0xa5, 0xe5, 0xf1, 0x71, 0xd8, 0x31, 0x15,
 	0x04, 0xc7, 0x23, 0xc3, 0x18, 0x96, 0x05, 0x9a, 0x07, 0x12, 0x80, 0xe2, 0xeb, 0x27, 0xb2, 0x75,
@@ -22,7 +22,7 @@ const int S[16][16] = { 0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x
 	0xe1, 0xf8, 0x98, 0x11, 0x69, 0xd9, 0x8e, 0x94, 0x9b, 0x1e, 0x87, 0xe9, 0xce, 0x55, 0x28, 0xdf,
 	0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68, 0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16 };
 
-const int SR[16][16] = { 0x52, 0x09, 0x6a, 0xd5, 0x30, 0x36, 0xa5, 0x38, 0xbf, 0x40, 0xa3, 0x9e, 0x81, 0xf3, 0xd7, 0xfb,
+const unsigned int SR[16][16] = { 0x52, 0x09, 0x6a, 0xd5, 0x30, 0x36, 0xa5, 0x38, 0xbf, 0x40, 0xa3, 0x9e, 0x81, 0xf3, 0xd7, 0xfb,
 	0x7c, 0xe3, 0x39, 0x82, 0x9b, 0x2f, 0xff, 0x87, 0x34, 0x8e, 0x43, 0x44, 0xc4, 0xde, 0xe9, 0xcb,
 	0x54, 0x7b, 0x94, 0x32, 0xa6, 0xc2, 0x23, 0x3d, 0xee, 0x4c, 0x95, 0x0b, 0x42, 0xfa, 0xc3, 0x4e,
 	0x08, 0x2e, 0xa1, 0x66, 0x28, 0xd9, 0x24, 0xb2, 0x76, 0x5b, 0xa2, 0x49, 0x6d, 0x8b, 0xd1, 0x25,
@@ -50,10 +50,10 @@ const int colM[4][4] = { 2, 3, 1, 1,
     1, 1, 2, 3,
     3, 1, 1, 2 };
 
-int w[44];
+unsigned int w[44] = {0};
 
-void substitute(int* state) {
-    int tmp;
+void substitute(unsigned int* state) {
+    unsigned int tmp;
     for(int i = 0; i < 16; i ++) {
         tmp = state[i];
         state[i] = S[tmp / 16][tmp % 16];
@@ -61,8 +61,8 @@ void substitute(int* state) {
     return;
 }
 
-void row_shift(int* state) {
-    int tmp[16] = {0};
+void row_shift(unsigned int* state) {
+    unsigned int tmp[16] = {0};
     for(int i = 0; i < 4; i ++) {
         for(int j = 0; j < 4; j ++) {
             tmp [4 * j + i] = state[(4 * j + 5 * i) % 16];
@@ -73,8 +73,8 @@ void row_shift(int* state) {
     }
 }
 
-void col_mix(int* state) {
-    int tmp, statep[16];
+void col_mix(unsigned int* state) {
+    unsigned int tmp, statep[16];
     for(int i = 0; i < 4; i ++) {
         for(int j = 0; j < 4; j ++) {
             tmp = 0;
@@ -89,8 +89,9 @@ void col_mix(int* state) {
     }
 }
 
-int T(int x, int t) {
-    int r, c, tmp = 0;
+unsigned int T(unsigned int x, int t) {
+    unsigned int tmp = 0;
+    int r, c;
     x = ((x << 8) | (x >> 24)) & 0x0000ffff;
     for(int i = 0; i < 4; i ++) {
         c = x % 16;
@@ -105,7 +106,7 @@ int T(int x, int t) {
 
 void generate_w(string str)
 {
-    int tmp, key[16];
+    unsigned int tmp, key[16];
     for(int i = 0; i < 16; i ++) {
         key[i] = (char)str[i];
         w[i / 4] |= key[i] << ((3 - i % 4) * 8);
@@ -117,12 +118,13 @@ void generate_w(string str)
         else {
             w[i] = w[i - 4] ^ T(w[i - 1], i / 4 - 1);
         }
+        cout<<w[i]<<endl;
     }
     return;
 }
 
-void add(int* state, int t) {
-    int tmp = 0;
+void add(unsigned int* state, int t) {
+    unsigned int tmp = 0;
     for(int i = 0; i < 16; i ++) {
         tmp |= state[i] << ((3 - i % 4) * 8);
         if(i % 4 == 3) {
@@ -136,22 +138,23 @@ void add(int* state, int t) {
     }
 }
 
-string int_to_str(int* ct) {
+string int_to_str(unsigned int* ct) {
     string ans = "";
-    int res;
+    unsigned int res;
     for(int i = 0; i < 16; i ++) {
         res = ct[i];
         ans = ans + str16[res / 16];
         ans = ans + str16[res % 16];
-        cout<<res<<endl;
+        //cout<<res<<endl;
     }
     return ans;
 }
 
 string encode(string strx, string strk) {
-    int bit[16] = {0};
+    unsigned int bit[16] = {0};
     for(int i = 0; i < 16; i ++) {
         bit[i] = (char)strx[i];
+        //cout<<bit[i]<<endl;
     }
     generate_w(strk);
     add(bit,0);
@@ -169,9 +172,13 @@ string encode(string strx, string strk) {
 
 int main() {
     string strx, strk;//128bit - 16char
+    /*
     cout << "Plain Text: ";
     getline(cin, strx);
     cout << "Key Text: ";
     getline(cin, strk);
+    */
+    strx = "abcdefghijklmnop";
+    strk = "abcdefghijklmnop";
     cout << "result: " << encode(strx, strk) << endl;
 }
