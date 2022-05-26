@@ -47,7 +47,7 @@ unsigned int I(unsigned int X, unsigned int Y, unsigned int Z) {
 }
 
 unsigned int* padding(char* str) {
-	unsigned slen = strlen(str);
+	unsigned int slen = strlen(str);
 	num = (slen * 8 + 64) / 512 + 1;
 	strlength = num * 16;
 	static unsigned int vec[MAX_LEN] = {0};
