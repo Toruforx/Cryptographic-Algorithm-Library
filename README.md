@@ -1,2 +1,3 @@
-# Visual-Text-Encryption
-Visual Text Encryption
+# Cryptographic Algorithm Library
+
+## Introduction
