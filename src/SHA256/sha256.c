@@ -139,15 +139,6 @@ char *sha256_encode(char *str)
     }
     return uin_to_str(h);
 }
-/*
-int main()
-{
-    char str[MAX_LEN];
-    printf("Plain Text: ");
-    gets(str);
-    printf("Result: ");
-    puts(encode(str));
-}*/
 
 #if 1
 int main(int argc, void *argv[])
