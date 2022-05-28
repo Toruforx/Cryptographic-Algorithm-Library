@@ -99,46 +99,33 @@ string rsa_decode(string strc)
     return ans;
 }
 
-int main()
-{
-    init();
-    generate_pq();
-    calculate();
-    generate_key();
-    cout << "Plain Text: ";
-    getline(cin, m);
-    string c = rsa_encode(m);
-    cout << "Cipher: " << c << endl;
-    cout << "Decode: " << rsa_decode(c) << endl;
-}
-/*
 #if 1
-int main(int argc, void *argv[])
+int main(int argc, char *argv[])
 {
-    //char *option, *text, *out;
-    string option, text, out;
+    string option, text, out1, out2;
     if (argc != 3)
     {
-        printf("Usage: rsa <--encode | --decode> <text>\n");
+        printf("Usage: rsa <--run> <text>\n");
         return 0;
     }
     else
     {
-        option = argv[1];
-        text = argv[2];
-        if (option == "--encode")
+        string option(argv[1]);
+        string text(argv[2]);
+        if (option == "--run")
         {
-            out = rsa_encode(text);
-            cout << out << endl;
-        }
-        else if (option == "--decode")
-        {
-            out = rsa_decode(text);
-            cout << out << endl;
+            init();
+            generate_pq();
+            calculate();
+            generate_key();
+            out1 = rsa_encode(text);
+            cout << "Encode: " << out1;
+            out2 = rsa_decode(out1);
+            cout << "Decode: " << out2 << endl;
         }
         else
         {
-            printf("Usage: rsa <--encode | --decode> <text>\n");
+            printf("Usage: rsa <--run> <text>\n");
             return 0;
         }
     }
@@ -146,4 +133,3 @@ int main(int argc, void *argv[])
     return 0;
 }
 #endif
-*/
