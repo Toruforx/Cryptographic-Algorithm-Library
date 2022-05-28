@@ -7,4 +7,4 @@ md5: md5.o
 	gcc -c $^ -o $@ -g
 
 clean:
-    rm -rf *.o md5
+	rm -rf *.o md5

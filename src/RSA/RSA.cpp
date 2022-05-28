@@ -5,9 +5,10 @@
 using namespace std;
 
 mpz_t p, q, n, phi, pub_key, pri_key;
-string pub_keystr, pri_keystr, nstr, m, c; 
+string pub_keystr, pri_keystr, nstr, m, c;
 
-void init() {
+void init()
+{
     mpz_init(p);
     mpz_init(q);
     mpz_init(n);
@@ -16,7 +17,8 @@ void init() {
     mpz_init(pri_key);
 }
 
-void generate_pq() {
+void generate_pq()
+{
     gmp_randstate_t seed;
     gmp_randinit_default(seed);
     gmp_randseed_ui(seed, time(NULL));
@@ -26,14 +28,16 @@ void generate_pq() {
     mpz_nextprime(q, q);
 }
 
-void calculate() {
+void calculate()
+{
     mpz_mul(n, q, p);
     mpz_sub_ui(p, p, 1);
     mpz_sub_ui(q, q, 1);
     mpz_mul(phi, p, q);
 }
 
-void generate_key() {
+void generate_key()
+{
     mpz_set_ui(pub_key, 65537);
     mpz_invert(pri_key, pub_key, phi);
     mpz_class temp_n(n);
@@ -44,7 +48,8 @@ void generate_key() {
     pri_keystr = temp_pri.get_str();
 }
 
-string encode(string strm) {
+string rsa_encode(string strm)
+{
     mpz_t m, temp_pub, temp_n;
     string ans = "";
     mpz_init(m);
@@ -52,7 +57,8 @@ string encode(string strm) {
     mpz_init(temp_n);
     mpz_set_str(temp_pub, pub_keystr.c_str(), 10);
     mpz_set_str(temp_n, nstr.c_str(), 10);
-    for(int i = 0; i < strm.length(); i ++) {
+    for (int i = 0; i < strm.length(); i++)
+    {
         mpz_set_ui(m, (unsigned long)strm[i]);
         mpz_powm(m, m, temp_pub, temp_n);
         mpz_class t(m);
@@ -65,7 +71,8 @@ string encode(string strm) {
     return ans;
 }
 
-string decode(string strc) {
+string rsa_decode(string strc)
+{
     mpz_t c, temp_pri, temp_n;
     string ans = "", temp = "";
     mpz_init(c);
@@ -73,8 +80,10 @@ string decode(string strc) {
     mpz_init(temp_n);
     mpz_set_str(temp_pri, pri_keystr.c_str(), 10);
     mpz_set_str(temp_n, nstr.c_str(), 10);
-    for(int i = 0; i < strc.length(); i ++) {
-        if(strc[i] == '\n') {
+    for (int i = 0; i < strc.length(); i++)
+    {
+        if (strc[i] == '\n')
+        {
             mpz_set_str(c, temp.c_str(), 10);
             mpz_powm(c, c, temp_pri, temp_n);
             mpz_class t(c);
@@ -82,20 +91,59 @@ string decode(string strc) {
             ans += (char)x;
             temp = "";
         }
-        else {
+        else
+        {
             temp += strc[i];
         }
     }
     return ans;
 }
-int main() {
+
+int main()
+{
     init();
     generate_pq();
     calculate();
     generate_key();
     cout << "Plain Text: ";
     getline(cin, m);
-    string c = encode(m);
+    string c = rsa_encode(m);
     cout << "Cipher: " << c << endl;
-    cout << "Decode: " << decode(c) << endl;
+    cout << "Decode: " << rsa_decode(c) << endl;
 }
+/*
+#if 1
+int main(int argc, void *argv[])
+{
+    //char *option, *text, *out;
+    string option, text, out;
+    if (argc != 3)
+    {
+        printf("Usage: rsa <--encode | --decode> <text>\n");
+        return 0;
+    }
+    else
+    {
+        option = argv[1];
+        text = argv[2];
+        if (option == "--encode")
+        {
+            out = rsa_encode(text);
+            cout << out << endl;
+        }
+        else if (option == "--decode")
+        {
+            out = rsa_decode(text);
+            cout << out << endl;
+        }
+        else
+        {
+            printf("Usage: rsa <--encode | --decode> <text>\n");
+            return 0;
+        }
+    }
+
+    return 0;
+}
+#endif
+*/
