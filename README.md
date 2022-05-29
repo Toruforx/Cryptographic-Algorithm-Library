@@ -19,7 +19,6 @@ C Implementation of Encryption and Decryption of Multiple Cryptographic Algorith
 1. Operating system：Windows
 2. Programming language：C, C++
 3. Arbitrary precision arithmetic library：GMP
-4. Code editor：vscode
 
 ## Program running
 
