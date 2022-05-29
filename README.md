@@ -26,19 +26,7 @@ C Implementation of Encryption and Decryption of Multiple Cryptographic Algorith
 1. **compile and link**
 
    ```makefile
-   gcc -c md5.c -o md5.o
-   gcc md5.o -o md5
-   
-   gcc -c sha256.c -o sha256.o
-   gcc sha256.o -o sha256
-   
-   gcc -c des.c -o des.o
-   gcc des.o -o des
-   
-   gcc -c aes.c -o aes.o
-   gcc aes.o -o aes
-   
-   g++ rsa.cpp -lgmp -o rsa 
+   make
    ```
 
 2. **run the program**
