@@ -45,9 +45,13 @@ C Implementation of Encryption and Decryption of Multiple Cryptographic Algorith
 
    ```
    ./md5 <--encode> <text>
+   
    ./sha256 <--encode> <text>
+   
    ./des <--encode | --decode> <text> <key>
+   
    ./aes <--encode | --decode> <text> <key>
+   
    ./rsa <--run> <text>
    ```
 
